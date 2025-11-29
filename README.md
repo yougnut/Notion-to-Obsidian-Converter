@@ -1,4 +1,4 @@
-# Notion to Obsidian Converter (Python Script)
+# Notion to Obsidian Converter
 
 一個簡單、強大且自動化的 Python 腳本，專為將 Notion 匯出的筆記遷移至 Obsidian 而設計。
 
