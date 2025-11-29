@@ -1,61 +1,79 @@
-# Notion to Obsidian Converter
+# Notion to Obsidian Bulk Converter (v2.0)
 
-一個簡單、強大且自動化的 Python 腳本，專為將 Notion 匯出的筆記遷移至 Obsidian 而設計。
-
-這不僅僅是移除檔名亂碼，還特別針對 **中文內容**、**表格斷行問題** 以及 **Database CSV** 進行了深度優化，確保您的知識庫能無縫轉移。
+這是一個專為 Notion 使用者設計的 Python 自動化工具，能將 Notion 匯出的 Markdown & CSV 檔案進行深度清理與格式轉換，使其完美相容於 Obsidian。
 
 ## ✨ 主要功能 (Features)
 
-- **🛡️ 完整保留中文檔名**：不同於其他只保留英數字的腳本，此工具完美支援中文、日文等非英文檔名，僅移除 Notion 產生的 32 碼 ID。
-- **📂 自動解壓縮與巢狀處理**：自動偵測並解壓 Notion 匯出的 ZIP 檔，包含處理內層的巢狀壓縮檔 (Nested ZIPs)。
-- **📊 智慧修復表格 (Table Fix)**：Notion 表格匯出時常因換行導致 Markdown 語法破碎，本腳本會自動偵測並合併斷行，使用 `<br>` 還原表格結構。
-- **🗃️ Database CSV 轉 Markdown**：自動將 Notion Database 匯出的 `.csv` 檔案轉換為 Markdown 索引頁 (Index Note)，保留頁面連結，不再讓資料庫變孤兒。
-- **🔗 連結完美修復**：
-    - 自動修正內部連結路徑 (Internal Links)。
-    - 修復 `about:blank` 類型的無效連結。
-    - 轉換 Notion Callout 為 Obsidian Callout 語法。
-- **🏷️ 標籤轉換**：將 Notion 的 `Tags: A, B` 格式自動轉換為 Obsidian 可識別的 `#A #B`。
-- **📦 自動打包**：處理完成後，自動將結果壓縮為 `_Obsidian_Ready.zip` 並開啟資料夾，方便直接匯入。
+### 核心修復
 
-## 🚀 使用方法 (Usage)
+  * **🛡️ 檔名亂碼清洗**：保留中文/日文檔名，僅移除 Notion 產生的 32 碼 ID。
+  * **🔗 連結完美修復**：自動修正內部連結路徑，並處理 `about:blank` 無效連結。
+  * **📊 表格斷行修復**：自動偵測並修復 Notion 表格因換行導致的 Markdown 破碎問題（支援排除 Math/Code Block）。
+  * **🏷️ 標籤轉換**：將 `Tags: A, B` 自動轉換為 Obsidian 的 `tags: [A, B]` 或行內 `#A #B`。
 
-### 1. 準備工作
+### v2.0 新增功能
 
-確保您的電腦已安裝 [Python 3](https://www.python.org/downloads/)。
+  * **🎛️ GUI 設定精靈**：啟動時提供圖形化介面，讓您自訂是否要「自動壓縮」、「開啟資料夾」等，並自動記憶上次設定。
+  * **💎 YAML Frontmatter 支援**：將 Notion 的 Page Properties 自動轉換為 Obsidian 頂部的 YAML Metadata（如 `Date`, `Status`, `Author` 等），便於 Dataview 插件使用。
+  * **🔻 Toggle 列表還原**：將 Notion 的 Toggle List 轉換為 HTML `<details><summary>` 語法，在 Obsidian 中也能完美摺疊/展開。
+  * **📂 CSV 智慧合併**：自動偵測 Database 匯出的 `_all.csv` 變體，保留資料最完整的版本並轉換為 Markdown 索引頁。
+  * **📝 錯誤日誌輸出**：轉換過程若有檔案失敗，將生成 `conversion_error_log.txt` 供您檢視。
 
-### 2. 下載腳本
+## 🚀 安裝與使用 (Installation & Usage)
 
-將本專案的 `notion_to_obsidian.py` (或您命名的檔案) 下載到您的電腦。
+### 1\. 環境需求
 
-### 3. 從 Notion 匯出
+  * Windows / macOS / Linux
+  * Python 3.6 或以上版本
+  * *(Windows 用戶)* 建議直接使用附帶的 `run.bat`
 
-1. 在 Notion 中前往 **Settings & Members** > **Settings** > **Export all workspace content**。
-2. Export format 選擇 **Markdown & CSV**。
-3. **Include subpages** 務必勾選。
-4. 下載匯出的 ZIP 檔案。
+### 2\. 從 Notion 匯出資料
 
-### 4. 執行轉換
+1.  前往 Notion **Settings & Members** \> **Settings** \> **Export all workspace content**。
+2.  **Export format**: 選擇 `Markdown & CSV`。
+3.  **Include subpages**: 務必勾選。
+4.  下載匯出的 ZIP 檔案。
 
-1. 雙擊執行腳本 (或是透過終端機 `python notion_to_obsidian.py`)。
-2. 程式會跳出檔案選擇視窗，請選擇您剛下載的 Notion ZIP 檔。
-3. 等待程式執行（視檔案大小而定）。
-4. 完成後，程式會自動開啟資料夾，您會看到一個檔名結尾為 `_Obsidian_Ready.zip` 的檔案。
+### 3\. 執行轉換
 
-### 5. 匯入 Obsidian
+#### Windows 使用者（推薦）
 
-1. 將 `_Obsidian_Ready.zip` 解壓縮。
-2. 開啟 Obsidian，選擇 **"Open folder as vault"**。
-3. 選擇解壓縮後的資料夾即可開始使用！
+直接雙擊資料夾中的 **`run.bat`** 檔案。
 
-## 🛠️ 技術細節 (Technical Details)
+#### Mac / Linux 使用者
 
-- **表格修復邏輯**：腳本會逐行掃描 Markdown，偵測以 `|` 開頭但未閉合的斷行，將其暫存並與下一行合併，直到表格列完整閉合。同時會避開 Code Block (`````) 與 Math Block (`$$`) 以免誤判。
-- **CSV 處理**：讀取 CSV 的第一欄（通常是 Title），將其轉換為 `[[WikiLink]]` 列表，並存為同名的 `.md` 檔案。
+開啟終端機 (Terminal)，移動到程式目錄並執行：
 
-## ⚠️ 注意事項
+```bash
+python notion_to_obsidian_bulk.py
+```
 
-- **備份**：此腳本不會修改您的原始 ZIP 檔，但建議在操作前保留原始匯出檔的備份。
-- **圖片路徑**：腳本預設不移動圖片位置 (`MOVE_ASSETS = False`)，以保持與 Notion 匯出結構一致，這通常對 Obsidian 相容性最好。
+*(若需修改設定，請先執行 `python config_setup.py`)*
+
+### 4\. 操作流程
+
+1.  **設定視窗**：程式啟動後會跳出設定視窗，勾選您偏好的選項後點擊「儲存並開始轉換」。
+2.  **選擇檔案**：在彈出的檔案瀏覽視窗中，選擇您剛下載的 Notion ZIP 檔。
+3.  **等待處理**：觀察終端機的進度條，程式將自動執行解壓縮、清洗、轉換與修復。
+4.  **完成**：完成後會依設定自動開啟目標資料夾（或生成的 `_Obsidian_Ready.zip`）。
+
+## ⚙️ 進階設定 (Configuration)
+
+除了 GUI 上的選項外，您可以直接編輯生成的 `config.ini` 檔案來控制更多細節功能：
+
+| 設定項目 (config.ini) | 預設值 | 說明 |
+| :--- | :--- | :--- |
+| `move_assets` | False | 是否移動圖片/附件到特定資料夾 (建議 False 以保持連結穩定) |
+| `enable_yaml` | True | 是否開啟 Notion Properties 轉 YAML 功能 |
+| `enable_toggles` | True | 是否開啟 Toggle List (`<details>`) 轉換功能 |
+| `fix_tables` | True | 是否開啟表格斷行修復功能 |
+| `delete_source_csv` | True | 轉換完成後是否刪除原始 CSV 檔 |
+
+## 🛠️ 技術細節
+
+  * **Toggle 邏輯**：程式透過縮排 (Indentation) 計算層級，將連續的縮排內容包覆在 `<details>` 標籤內，並排除程式碼區塊內的內容。
+  * **YAML 處理**：讀取檔案前幾行，辨識 `Property: Value` 格式，將其轉換為標準的 YAML 格式並置於檔案最上方。
+  * **CSV 處理**：除了轉為 Markdown 連結列表外，新增了比對檔案大小的邏輯，確保不會因為 Notion 匯出分割檔案而遺失資料。
 
 ## License
 
