@@ -15,7 +15,6 @@
 
   * **🎛️ GUI 設定精靈**：啟動時提供圖形化介面，讓您自訂是否要「自動壓縮」、「開啟資料夾」等，並自動記憶上次設定。
   * **💎 YAML Frontmatter 支援**：將 Notion 的 Page Properties 自動轉換為 Obsidian 頂部的 YAML Metadata（如 `Date`, `Status`, `Author` 等），便於 Dataview 插件使用。
-  * **🔻 Toggle 列表還原**：將 Notion 的 Toggle List 轉換為 HTML `<details><summary>` 語法，在 Obsidian 中也能完美摺疊/展開。
   * **📂 CSV 智慧合併**：自動偵測 Database 匯出的 `_all.csv` 變體，保留資料最完整的版本並轉換為 Markdown 索引頁。
   * **📝 錯誤日誌輸出**：轉換過程若有檔案失敗，將生成 `conversion_error_log.txt` 供您檢視。
 
@@ -71,7 +70,6 @@ python notion_to_obsidian_bulk.py
 
 ## 🛠️ 技術細節
 
-  * **Toggle 邏輯**：程式透過縮排 (Indentation) 計算層級，將連續的縮排內容包覆在 `<details>` 標籤內，並排除程式碼區塊內的內容。
   * **YAML 處理**：讀取檔案前幾行，辨識 `Property: Value` 格式，將其轉換為標準的 YAML 格式並置於檔案最上方。
   * **CSV 處理**：除了轉為 Markdown 連結列表外，新增了比對檔案大小的邏輯，確保不會因為 Notion 匯出分割檔案而遺失資料。
 
